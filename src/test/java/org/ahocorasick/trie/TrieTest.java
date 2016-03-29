@@ -144,7 +144,7 @@ public class TrieTest {
                 .addKeyword("he")
                 .build();
 
-        final List<Emit> emits = new ArrayList<>();
+        final List<Emit> emits = new ArrayList<Emit>();
         EmitHandler emitHandler = new EmitHandler() {
 
             @Override

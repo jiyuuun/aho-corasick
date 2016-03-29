@@ -83,7 +83,7 @@ public class State {
 
     public void addEmit(String keyword) {
         if (this.emits == null) {
-            this.emits = new TreeSet<>();
+            this.emits = new TreeSet<String>();
         }
         this.emits.add(keyword);
     }

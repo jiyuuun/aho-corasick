@@ -43,7 +43,7 @@ public class Trie {
 
     public Collection<Token> tokenize(String text) {
 
-        Collection<Token> tokens = new ArrayList<>();
+        Collection<Token> tokens = new ArrayList<Token>();
 
         Collection<Emit> collectedEmits = parseText(text);
         int lastCollectedPosition = -1;
@@ -148,13 +148,22 @@ public class Trie {
 
 	private boolean isPartialMatch(CharSequence searchText, Emit emit) {
 		return (emit.getStart() != 0 &&
-			Character.isAlphabetic(searchText.charAt(emit.getStart() - 1))) ||
+			isAlphabetic(searchText.charAt(emit.getStart() - 1))) ||
 			(emit.getEnd() + 1 != searchText.length() &&
-			Character.isAlphabetic(searchText.charAt(emit.getEnd() + 1)));
+			isAlphabetic(searchText.charAt(emit.getEnd() + 1)));
 	}
+	
+    public static boolean isAlphabetic(int codePoint) {
+        return (((((1 << Character.UPPERCASE_LETTER) |
+            (1 << Character.LOWERCASE_LETTER) |
+            (1 << Character.TITLECASE_LETTER) |
+            (1 << Character.MODIFIER_LETTER) |
+            (1 << Character.OTHER_LETTER) |
+            (1 << Character.LETTER_NUMBER)) >> Character.getType(codePoint)) & 1) != 0);
+    }
 
 	private void removePartialMatches(CharSequence searchText, List<Emit> collectedEmits) {
-		List<Emit> removeEmits = new ArrayList<>();
+		List<Emit> removeEmits = new ArrayList<Emit>();
 		for (Emit emit : collectedEmits) {
 			if (isPartialMatch(searchText, emit)) {
 				removeEmits.add(emit);
@@ -167,7 +176,7 @@ public class Trie {
 
     private void removePartialMatchesWhiteSpaceSeparated(CharSequence searchText, List<Emit> collectedEmits) {
         long size = searchText.length();
-        List<Emit> removeEmits = new ArrayList<>();
+        List<Emit> removeEmits = new ArrayList<Emit>();
         for (Emit emit : collectedEmits) {
             if ((emit.getStart() == 0 || Character.isWhitespace(searchText.charAt(emit.getStart() - 1))) &&
                 (emit.getEnd() + 1 == size || Character.isWhitespace(searchText.charAt(emit.getEnd() + 1)))) {
@@ -190,7 +199,7 @@ public class Trie {
     }
 
     private void constructFailureStates() {
-        Queue<State> queue = new LinkedBlockingDeque<>();
+        Queue<State> queue = new LinkedBlockingDeque<State>();
 
         // First, set the fail state of all depth 1 states to the root state
         for (State depthOneState : this.rootState.getStates()) {
